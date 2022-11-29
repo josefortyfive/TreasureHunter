@@ -236,7 +236,7 @@ public class Player extends Entity{
 
             }
             else {
-                gp.playSE(5);
+                gp.playSE(7);
                 attacking = true;
             }
         }
