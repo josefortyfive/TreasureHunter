@@ -27,8 +27,37 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
+        if(gp.gameState == gp.titleState) {
+            titleState(code);
+        }
+
+
+        // PLAY STATE
+        else if(gp.gameState == gp.playState){
+            playState(code);
+        }
+
+        // PAUSE STATE
+        else if(gp.gameState == gp.pauseState){
+            pauseState(code);
+        }
+        // DIALOGUE STATE
+
+        else if(gp.gameState == gp.dialogueState){
+            dialogueState(code);
+        }
+
+        // CHARACTER STATE
+        else if(gp.gameState == gp.characterState){
+            characterState(code);
+        }
+
+    }
+
+    public void titleState(int code){
+
         // TITLE STATE
-        if(gp.gameState == gp.titleState){
+
             if(code == KeyEvent.VK_W){
                 gp.ui.commandNum--;
                 if(gp.ui.commandNum < 0){
@@ -46,7 +75,7 @@ public class KeyHandler implements KeyListener {
             if(code == KeyEvent.VK_ENTER){
                 if(gp.ui.commandNum ==0){
                     gp.gameState = gp.playState;
-                    //gp.playMusic(0);
+                    gp.playMusic(0);
                 }
                 if(gp.ui.commandNum == 1){
 
@@ -56,64 +85,68 @@ public class KeyHandler implements KeyListener {
                 }
             }
 
+    }
+
+
+    public void playState(int code){
+        if(code == KeyEvent.VK_W){
+            upPressed = true;
         }
 
-        // PLAY STATE
-        else if(gp.gameState == gp.playState){
-            if(code == KeyEvent.VK_W){
-                upPressed = true;
-            }
-
-            if(code == KeyEvent.VK_S){
-                downPressed = true;
-            }
-            if(code == KeyEvent.VK_A){
-                leftPressed = true;
-            }
-            if(code == KeyEvent.VK_D){
-                rightPressed = true;
-            }
-            if(code == KeyEvent.VK_P){
-                gp.gameState = gp.pauseState;
-
-            }
-            if(code == KeyEvent.VK_ENTER){
-                enterPressed = true;
-
-            }
-
-
-            //DEBUG
-            if(code == KeyEvent.VK_T){
-                if(checkedDrawTime == false){
-                    checkedDrawTime = true;
-                }
-                else if(checkedDrawTime == true){
-                    checkedDrawTime = false;
-
-                }
-            }
+        if(code == KeyEvent.VK_S){
+            downPressed = true;
         }
-
-        // PAUSE STATE
-
-
-        else if(gp.gameState == gp.pauseState){
-            if(code == KeyEvent.VK_P){
-                gp.gameState = gp.playState;
-
-            }
+        if(code == KeyEvent.VK_A){
+            leftPressed = true;
         }
-        // DIALOGUE STATE
+        if(code == KeyEvent.VK_D){
+            rightPressed = true;
+        }
+        if(code == KeyEvent.VK_P){
+            gp.gameState = gp.pauseState;
 
-        else if(gp.gameState == gp.dialogueState){
-            if(code == KeyEvent.VK_ENTER){
-                gp.gameState = gp.playState;
-            }
+        }
+        if(code == KeyEvent.VK_C){
+            gp.gameState = gp.characterState;
+        }
+        if(code == KeyEvent.VK_ENTER){
+            enterPressed = true;
+
         }
 
 
 
+        //DEBUG
+        if(code == KeyEvent.VK_T){
+            if(checkedDrawTime == false){
+                checkedDrawTime = true;
+            }
+            else if(checkedDrawTime == true){
+                checkedDrawTime = false;
+
+            }
+        }
+    }
+
+    public void pauseState(int code){
+
+        if(code == KeyEvent.VK_P){
+            gp.gameState = gp.playState;
+
+        }
+    }
+
+    public void dialogueState(int code){
+
+        if(code == KeyEvent.VK_ENTER){
+            gp.gameState = gp.playState;
+        }
+    }
+
+    public void characterState(int code){
+        if(code == KeyEvent.VK_C){
+            gp.gameState = gp.playState;
+        }
     }
 
     @Override

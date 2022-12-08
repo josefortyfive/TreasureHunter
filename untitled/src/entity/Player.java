@@ -3,6 +3,8 @@ package entity;
 import input.KeyHandler;
 import main.GamePanel;
 import main.UtilityTool;
+import object.OBJ_Shield_Wood;
+import object.OBJ_Sword_Normal;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,6 +18,7 @@ public class Player extends Entity{
 
     public final int screenX;
     public final int screenY;
+    public boolean attackCancel = false;
 
 
     public Player(GamePanel gp, KeyHandler keyH){
@@ -48,15 +51,32 @@ public class Player extends Entity{
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
         speed = 4;
-
         direction = "down";
 
         //PLAYER STATUS
 
+        level = 1;
         maxLife = 6;
         life = maxLife;
+        strength = 1; // more strength, more damage
+        dexterity = 1; // more dex, more defense
+        exp = 0;
+        nextLevelExp = 5;
+        coin = 0;
+        currentWeapon = new OBJ_Sword_Normal(gp);
+        currentShield = new OBJ_Shield_Wood(gp);
+        attack = getAttack();
+        defense = getDefense();
+    }
 
+    public int getAttack(){
 
+        return attack = strength * currentWeapon.attackValue;
+    }
+
+    public int getDefense(){
+
+        return  defense = dexterity * currentShield.defenseValue;
     }
     public void getPlayerImage(){
 
@@ -149,6 +169,14 @@ public class Player extends Entity{
                 }
             }
 
+            if(keyH.enterPressed == true && attackCancel == false){
+                gp.playSE(7);
+                attacking = true;
+                spriteCounter = 0;
+            }
+
+            attackCancel  = false;
+
             gp.keyH.enterPressed = false;
 
             spriteCounter++;
@@ -231,14 +259,12 @@ public class Player extends Entity{
     public void interactNPC(int i){
         if(gp.keyH.enterPressed ==true){
             if(i != 999){
+                attackCancel = true;
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
 
             }
-            else {
-                gp.playSE(7);
-                attacking = true;
-            }
+
         }
     }
 
@@ -259,6 +285,7 @@ public class Player extends Entity{
                 gp.playSE(5);
                 gp.monster[i].life -= 1;
                 gp.monster[i].invincible = true;
+                gp.monster[i].damageReaction();
 
                 if(gp.monster[i].life <= 0){
                     gp.monster[i].dying = true;
