@@ -3,6 +3,7 @@ package entity;
 import input.KeyHandler;
 import main.GamePanel;
 import main.UtilityTool;
+import object.OBJ_Key;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 
@@ -10,6 +11,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Player extends Entity{
 
@@ -19,6 +21,8 @@ public class Player extends Entity{
     public final int screenX;
     public final int screenY;
     public boolean attackCancel = false;
+    public ArrayList<Entity> inventory = new ArrayList<>();
+    public final int maxInventorySize = 20;
 
 
     public Player(GamePanel gp, KeyHandler keyH){
@@ -37,12 +41,12 @@ public class Player extends Entity{
         solidArea.width = 32;
         solidArea.height = 32;
 
-        attackArea.width = 36;
-        attackArea.height = 36;
+
 
         setDefaultValues();
         getPlayerImage();
         getPlayerAttackImage();
+        setItems();
     }
 
 
@@ -69,8 +73,17 @@ public class Player extends Entity{
         defense = getDefense();
     }
 
+    public void setItems(){
+        inventory.add(currentWeapon);
+        inventory.add(currentShield);
+        inventory.add(new OBJ_Key(gp));
+
+
+
+    }
     public int getAttack(){
 
+        attackArea = currentWeapon.attackArea;
         return attack = strength * currentWeapon.attackValue;
     }
 
@@ -252,7 +265,23 @@ public class Player extends Entity{
         }
     }
     public void pickUpObject(int i){
+        if( i != 999){
 
+            String text;
+
+            if(inventory.size() != maxInventorySize){
+                inventory.add(gp.obj[i]);
+                gp.playSE(1);
+                text = "Got a " + gp.obj[i].name+ "!";
+
+            }
+            else{
+                text = "You cannot carry any more!";
+            }
+            gp.ui.addMessage(text);
+            gp.obj[i] = null;
+
+        }
 
     }
 
@@ -273,7 +302,12 @@ public class Player extends Entity{
 
             if(invincible == false){
                 gp.playSE(6);
-                life -= 1;
+                int damage = gp.monster[i].attack - defense;
+                if(damage < 0){
+                    damage = 0;
+                }
+
+                life -= damage;
                 invincible = true;
             }
         }
@@ -283,16 +317,46 @@ public class Player extends Entity{
         if(i != 999) {
             if(gp.monster[i].invincible == false){
                 gp.playSE(5);
-                gp.monster[i].life -= 1;
+
+                int damage =  attack - gp.monster[i].defense ;
+                if(damage < 0){
+                    damage = 0;
+                }
+                gp.monster[i].life -= damage;
+                gp.ui.addMessage(damage + " damage!");
+
                 gp.monster[i].invincible = true;
                 gp.monster[i].damageReaction();
 
                 if(gp.monster[i].life <= 0){
                     gp.monster[i].dying = true;
+                    gp.ui.addMessage("killed the "+gp.monster[i].name+ "!");
+                    gp.ui.addMessage("Exp: "+gp.monster[i].exp);
+                    exp += gp.monster[i].exp;
+                    checkLevelUp();
                 }
             }
         }
 
+    }
+
+    public void checkLevelUp(){
+        if(exp >= nextLevelExp){
+            level++;
+            nextLevelExp = nextLevelExp * 2;
+            maxLife += 2;
+            strength++;
+            dexterity++;
+            attack = getAttack();
+            defense = getDefense();
+
+            gp.playSE(8);
+            gp.gameState = gp.dialogueState;
+            gp.ui.currentDialogue = "You have level " +level+ " now! \n"
+                        +"You feel stronger!";
+
+
+        }
     }
     public void draw(Graphics2D g2){
 
