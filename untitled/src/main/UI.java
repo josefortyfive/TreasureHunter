@@ -2,7 +2,6 @@ package main;
 
 import entity.Entity;
 import object.OBJ_Heart;
-import object.OBJ_Key;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,10 +31,10 @@ public class UI {
         this.gp = gp;
 
         try{
-            InputStream is = getClass().getResourceAsStream("/res/font/x12y16pxMaruMonica.ttf");
+            InputStream is = getClass().getResourceAsStream("/font/x12y16pxMaruMonica.ttf");
             maruMonica = Font.createFont(Font.TRUETYPE_FONT, is);
 
-            is = getClass().getResourceAsStream("/res/font/Purisa Bold.ttf");
+            is = getClass().getResourceAsStream("/font/Purisa Bold.ttf");
             purisaB =Font.createFont(Font.TRUETYPE_FONT, is);
 
 
