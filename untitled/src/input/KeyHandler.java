@@ -8,7 +8,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, shotKeyPressed;
 
     public boolean checkedDrawTime = false;
 
@@ -75,7 +75,8 @@ public class KeyHandler implements KeyListener {
             if(code == KeyEvent.VK_ENTER){
                 if(gp.ui.commandNum ==0){
                     gp.gameState = gp.playState;
-                    //gp.playMusic(0);
+
+                   //  gp.playMusic(0); // play's the main music of the game
                 }
                 if(gp.ui.commandNum == 1){
 
@@ -88,6 +89,7 @@ public class KeyHandler implements KeyListener {
     }
 
 
+    // This controls the movement of the player
     public void playState(int code){
         if(code == KeyEvent.VK_W){
             upPressed = true;
@@ -114,7 +116,9 @@ public class KeyHandler implements KeyListener {
 
         }
 
-
+        if(code == KeyEvent.VK_F){
+            shotKeyPressed = true;
+        }
 
         //DEBUG
         if(code == KeyEvent.VK_T){
@@ -200,6 +204,10 @@ public class KeyHandler implements KeyListener {
         }
         if(code == KeyEvent.VK_D){
             rightPressed = false;
+        }
+        // release the fire
+        if(code == KeyEvent.VK_F){
+            shotKeyPressed = false;
         }
     }
 }
