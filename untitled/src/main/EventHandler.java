@@ -101,13 +101,16 @@ public class EventHandler extends  EventRect{
         gp.player.life -= 1;
         canTouchEvent = false;
     }
+
+
     public void healingPool(int col, int row, int gameState){
         if(gp.keyH.enterPressed == true){
             gp.gameState = gameState;
             gp.player.attackCancel = true;
             gp.playSE(2);
             gp.ui.currentDialogue = "You drink the water. \nYour life has been recovered.";
-            gp.player.life = gp.player.maxLife;
+            gp.player.life = gp.player.maxLife; // recovers Player's HP
+            gp.player.mana = gp.player.maxMana;
             gp.aSetter.setMonster();
         }
     }

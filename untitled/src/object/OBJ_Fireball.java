@@ -5,7 +5,6 @@ import entity.Projectile;
 import main.GamePanel;
 
 public class OBJ_Fireball extends Projectile {
-
     GamePanel gp;
 
     public OBJ_Fireball(GamePanel gp){
@@ -20,9 +19,6 @@ public class OBJ_Fireball extends Projectile {
         useCost = 1;
         alive = false;
         getImage();
-
-
-
     }
 
     public void getImage(){
@@ -37,6 +33,15 @@ public class OBJ_Fireball extends Projectile {
 
     }
 
+    public boolean haveResource(Entity user){
+        boolean haveResource = false;
+        if(user.mana >= useCost){
+            haveResource = true;
+        }
+        return  haveResource;
+    }
 
-
+    public void subtractResouce(Entity user){
+        user.mana -= useCost;
+    }
 }
