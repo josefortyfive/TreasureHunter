@@ -4,6 +4,7 @@ import entity.Entity;
 import entity.Player;
 import input.KeyHandler;
 import tile.TileManager;
+import tile_interactive.InteractiveTile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,9 +46,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     // ENTITY AND OJBECT
     public Player player = new Player(this, keyH);
-    public Entity obj[] = new Entity[10];
+    public Entity obj[] = new Entity[30];
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[20];
+    public InteractiveTile iTile[] = new InteractiveTile[50];
     public ArrayList<Entity> projectileList = new ArrayList<>();
     ArrayList<Entity> entityList = new ArrayList<>();
 
@@ -81,6 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setObject();
         aSetter.setNPC();
         aSetter.setMonster();
+        aSetter.setInteractiveTile();
         playMusic(0);
         stopMusic();
         gameState = titleState;
@@ -141,6 +144,7 @@ public class GamePanel extends JPanel implements Runnable {
                         monster[i].update();
                     }
                     if(monster[i].alive == false){
+                        monster[i].checkDrop();
                         monster[i]=null;
                     }
 
@@ -156,6 +160,12 @@ public class GamePanel extends JPanel implements Runnable {
                         projectileList.remove(i);
                     }
 
+                }
+            }
+
+            for(int i = 0; i < iTile.length; i++ ){
+                if(iTile[i] != null){
+                    iTile[i].update();
                 }
             }
 
@@ -189,6 +199,12 @@ public class GamePanel extends JPanel implements Runnable {
             // TILE
             tileM.draw(g2);
 
+            //Draw Interactive Tile
+            for(int i = 0; i < iTile.length; i++){
+                if(iTile[i] != null){
+                    iTile[i].draw(g2);
+                }
+            }
             entityList.add(player);
 
             for(int i = 0; i < npc.length; i++){
